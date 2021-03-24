@@ -2,18 +2,32 @@ import React, {useState} from 'react';
 import './App.css';
 import ToDo from './interfaces/ToDo'
 import Input from "./components/Input/Input";
-import List from "./components/List/List";
+import InputList from "./components/List/InputList";
 import Banner from "./components/Banner/Banner";
 
 function App() {
   const [list, setList] = useState<ToDo[]>([]);
 
     const addToList = (task: string) => {
-        const toDoToAdd: ToDo = {
-            text: task,
-            isCompleted: false
-        };
-        setList([...list, toDoToAdd]);
+        const hasDuplicate = list.reduce((haveSeenDuplicate: boolean, toDo: ToDo) => {
+            if (toDo.text === task) {
+                return true;
+            }
+            return haveSeenDuplicate;
+        }, false);
+        if (hasDuplicate) {
+            alert("Duplicate todo not allowed");
+            return;
+        }
+        if (task.length) {
+            const toDoToAdd: ToDo = {
+                text: task,
+                isCompleted: false
+            };
+            setList([...list, toDoToAdd]);
+        } else {
+            alert("Duplicate todo not allowed")
+        }
     };
 
     const handleDelete = (index: number) => {
@@ -31,7 +45,7 @@ function App() {
         setList(listWithCompletion);
     };
 
-    const countOfRemainingTodos = () => {
+    const countRemainingTodos = () => {
         return list.reduce((count: number, toDo: ToDo )=> {
             if (!toDo.isCompleted) {
                 count++;
@@ -42,9 +56,9 @@ function App() {
 
   return (
     <div className="App">
-      <Banner countOfRemainingTodos={countOfRemainingTodos} />
+      <Banner countRemainingTodos={countRemainingTodos} />
       <Input handleAddToDo={addToList} />
-      <List
+      <InputList
           list={list}
           handleDelete={handleDelete}
           handleComplete={handleComplete}

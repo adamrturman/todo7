@@ -1,3 +1,7 @@
 .completed {
     text-decoration-line: line-through;
 }
+
+.list.listItem {
+    justify-content: center;
+}
