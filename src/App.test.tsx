@@ -2,10 +2,6 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import App from './App';
 
-//  Question - why can't I pull const { getByText } = render(<App />) to the top and into global scope
-//  therefore eliminating the repetition within each test
-
-
 test('renders title', () => {
   const { getByText } = render(<App />);
   getByText("Todo 7");
@@ -112,15 +108,13 @@ test('deleting a individual todos doesnt affect other todos', () => {
   fireEvent.change(input, { target: { value: "get meat" } });
   fireEvent.click(addButton);
 
-  fireEvent.click(getByTestId("get bread deleteIcon"));
+  const getMeatText = getByTestId("get meat");
+
   fireEvent.click(getByTestId("get meat deleteIcon"));
+  fireEvent.click(getByTestId("get bread deleteIcon"));
 
   expect(getByTestId("get eggs")).toBeInTheDocument();
   expect(getByTestId("get milk")).toBeInTheDocument();
-
-  //  I expected these to work, but they did not
-  // expect(getByTestId("get bread")).not.toBeInTheDocument();
-  // expect(getByTestId("get meat") as HTMLElement).toBeNull();
 });
 
 test('adding a todo increments the number of remaining tasks', () => {
